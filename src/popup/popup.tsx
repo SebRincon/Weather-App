@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './popup.css'
+import { fetchOpenWeatherData } from '../utils/api'
+
+
+
 
 const App: React.FC<{}> = () => {
+
+  useEffect(() => { 
+    fetchOpenWeatherData('Houston')
+      .then((data) => console.log(data))
+      .catch((err) => console.log('ERROR'))
+  }, [])
   return (
     <div>
       <img src="icon.png" />
