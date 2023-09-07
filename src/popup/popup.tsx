@@ -10,7 +10,7 @@ const App: React.FC<{}> = () => {
 
   useEffect(() => { 
     fetchOpenWeatherData('Houston')
-      .then((data) => console.log(data))
+      .then((data) => console.log(data.main.temp))
       .catch((err) => console.log('ERROR'))
   }, [])
   return (
