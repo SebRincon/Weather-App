@@ -1,7 +1,8 @@
-import React from 'react'
 import { createRoot } from 'react-dom/client'
-import './popup.css'
 import WeatherCard from './WeatherCard'
+import 'fontsource-roboto'
+import React from 'react'
+import './popup.css'
 
 
 
@@ -12,6 +13,7 @@ const App: React.FC<{}> = () => {
     <div>
     <WeatherCard city='Houston'/>
     <WeatherCard city='New York'/>
+    <WeatherCard city='dasldl'/>
     </div>
   )
 }
