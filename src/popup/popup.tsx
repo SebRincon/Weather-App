@@ -1,31 +1,42 @@
-import { createRoot } from 'react-dom/client'
+import React, { useState, useEffect} from 'react'
 import WeatherCard from './WeatherCard'
-import 'fontsource-roboto'
-import React, { useState } from 'react'
-import './popup.css'
+import { createRoot } from 'react-dom/client'
+import { Add as AddIcon } from '@material-ui/icons'
+import { setStoredCities, getStoredCitites } from '../utils/storage'
 import { Grid, Box, InputBase, IconButton, Paper, Icon } from '@material-ui/core'
-import {Add as AddIcon} from '@material-ui/icons'
+import 'fontsource-roboto'
+import './popup.css'
 
 
 const App: React.FC<{}> = () => {
-
+  
   const [cityInput, setCityInput] = useState<string>('')
-  const [cities, setCities] = useState<string[]>([
-    'Houston',
-    'New York',
-    'Error'
-  ])
+  const [cities, setCities] = useState<string[]>([])
+  
+  //? Fetching data from storage on open
+    useEffect(() => { 
+      getStoredCitites().then(cities => {
+        setCities(cities)
+      })
+    }, [])
+
   const handleCityDeleteButtonClick = (index: number) => {
-    cities.splice(index, 1) // splice will delete the value in the list 
-    setCities([...cities]) // We then update the state with the new list
+    cities.splice(index, 1) // splice will delete the value in the list
+    const updatedCitites = [...cities]
+    setStoredCities(updatedCitites).then(() => {
+      setCities(updatedCitites) // We then update the state with the new list
+    })  
   }
 
   const handleCityButtonClick = () => { 
     if (cityInput === '') { 
       return
     }
-    setCities([...cities, cityInput])
-    setCityInput('')
+    const updatedCitites = [...cities, cityInput]
+    setStoredCities(updatedCitites).then(() => { 
+      setCities(updatedCitites)
+      setCityInput('')
+    })
   }
 
   return (

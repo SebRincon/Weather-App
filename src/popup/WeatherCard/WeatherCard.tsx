@@ -45,7 +45,8 @@ const WeatherCard: React.FC<{
 
     if (cardState == 'loading' || cardState == 'error') {
         return (
-          <WeatherCardContainer onDelete={onDelete}> //? Passing the onDelete function to the CardContainer
+            <WeatherCardContainer onDelete={onDelete}> 
+            {/* //? Passing the onDelete function to the CardContainer */}
             <Typography variant="body1">
               {cardState == 'loading'
                 ? 'Loading... '
@@ -58,7 +59,7 @@ const WeatherCard: React.FC<{
     // Card UI Creation
     return (
       <>
-          //? Passing the onDelete function to the CardContainer
+          {/* //? Passing the onDelete function to the CardContainer */}
         <WeatherCardContainer onDelete={onDelete}>
           <Typography variant="h5">{weatherData.name}</Typography>
           <Typography variant="body1">
