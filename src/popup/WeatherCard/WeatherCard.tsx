@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { OpenWeatherData, fetchOpenWeatherData } from '../../utils/api'
+import { OpenWeatherData, OpenWeatherTemp, fetchOpenWeatherData } from '../../utils/api'
 import {Box, Card,Button,  CardContent, CardActions, Typography} from '@material-ui/core'
 
 
@@ -27,50 +27,50 @@ type WeatherCardState = 'loading' | 'error' | 'ready'
 
 // Setup react component w/ a required prop called city
 const WeatherCard: React.FC<{
-    city: string,
-    onDelete?: () => void // Passing the onDelete function down from the WeatherCardContainer
-    
-}> = ({ city, onDelete}) => {  // Destructure the funciton onDelete
-    const [weatherData, setWeatherData] = useState<OpenWeatherData | null>(null)
-    const [cardState, setCardState] = useState<WeatherCardState> ('loading')
-    useEffect(() => {
-      fetchOpenWeatherData(city)
-          .then((data) => {
-              setWeatherData(data)
-              setCardState('ready')
-          })
-        .catch((err) => setCardState('error'))
-    }, [city])
+  city: string
+  tempScale: OpenWeatherTemp
+  onDelete?: () => void // Passing the onDelete function down from the WeatherCardContainer
+}> = ({ city, tempScale, onDelete }) => {
+  // Destructure the funciton onDelete
+  const [weatherData, setWeatherData] = useState<OpenWeatherData | null>(null)
+  const [cardState, setCardState] = useState<WeatherCardState>('loading')
+  useEffect(() => {
+    fetchOpenWeatherData(city, tempScale)
+      .then((data) => {
+        setWeatherData(data)
+        setCardState('ready')
+      })
+      .catch((err) => setCardState('error'))
+  }, [city, tempScale])
 
-
-    if (cardState == 'loading' || cardState == 'error') {
-        return (
-            <WeatherCardContainer onDelete={onDelete}> 
-            {/* //? Passing the onDelete function to the CardContainer */}
-            <Typography variant="body1">
-              {cardState == 'loading'
-                ? 'Loading... '
-                : `Error - Not retreive data for the city: ${city}`}
-            </Typography>
-          </WeatherCardContainer>
-        ) 
-        }
-
-    // Card UI Creation
+  if (cardState == 'loading' || cardState == 'error') {
     return (
-      <>
-          {/* //? Passing the onDelete function to the CardContainer */}
-        <WeatherCardContainer onDelete={onDelete}>
-          <Typography variant="h5">{weatherData.name}</Typography>
-          <Typography variant="body1">
-            {Math.round(weatherData.main.temp)}
-          </Typography>
-          <Typography variant="body1">
-            Feels Like: {Math.round(weatherData.main.feels_like)}
-          </Typography>
-        </WeatherCardContainer>
-      </>
+      <WeatherCardContainer onDelete={onDelete}>
+        {/* //? Passing the onDelete function to the CardContainer */}
+        <Typography variant="body1">
+          {cardState == 'loading'
+            ? 'Loading... '
+            : `Error - Not retreive data for the city: ${city}`}
+        </Typography>
+      </WeatherCardContainer>
     )
+  }
+
+  // Card UI Creation
+  return (
+    <>
+      {/* //? Passing the onDelete function to the CardContainer */}
+      <WeatherCardContainer onDelete={onDelete}>
+        <Typography variant="h5">{weatherData.name}</Typography>
+        <Typography variant="body1">
+          {Math.round(weatherData.main.temp)}
+        </Typography>
+        <Typography variant="body1">
+          Feels Like: {Math.round(weatherData.main.feels_like)}
+        </Typography>
+      </WeatherCardContainer>
+    </>
+  )
 }
 
 

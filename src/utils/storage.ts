@@ -1,5 +1,11 @@
+import { OpenWeatherTemp } from "./api"
 export interface LocalStorage{ 
     citites?: string[]
+    options?: LocalStorageOptions
+}
+
+export interface LocalStorageOptions {
+  tempScale: OpenWeatherTemp
 }
 
 //? This is a type that can only be of types form Local storage
@@ -8,11 +14,9 @@ export interface LocalStorage{
 //?     anotherField ?: string[]
 //? keyof -->  'cities' | 'anotherField'
 
-export type LocalStorageKey = keyof LocalStorage 
+export type LocalStorageKeys = keyof LocalStorage 
 
 export function setStoredCities(citites: string[]): Promise<void> {
-    console.log('Setting Cities')
-    console.log(citites)
     const vals: LocalStorage = {
         citites
     }
@@ -25,11 +29,30 @@ export function setStoredCities(citites: string[]): Promise<void> {
 }
 
 export function getStoredCitites(): Promise<string[]> { 
-    console.log('Getting Cities')
-    const keys: LocalStorageKey[] = ['citites']
+    const keys: LocalStorageKeys[] = ['citites']
     return new Promise((resolve) => { 
         chrome.storage.local.get(keys, (res: LocalStorage) => { 
             resolve( res.citites ?? [] ) //? When the function finishes it will return the citites list
+        })
+    })
+}
+
+export function setStoredOptions(options: LocalStorageOptions): Promise<void> { 
+    const vals: LocalStorage = {
+        options
+    }
+    return new Promise((resolve) => {
+        chrome.storage.local.set(
+            vals,
+            () => { resolve() })
+    })
+}
+
+export function getStoredOptions(): Promise<LocalStorageOptions> { 
+    const keys: LocalStorageKeys[] = ["options"]
+    return new Promise((resolve) => { 
+        chrome.storage.local.get(keys, (res: LocalStorage) => { 
+            resolve(res.options)
         })
     })
 }
