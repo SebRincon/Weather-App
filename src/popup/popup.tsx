@@ -1,40 +1,57 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import WeatherCard from '../components/WeatherCard'
 import { createRoot } from 'react-dom/client'
-import { Add as AddIcon } from '@material-ui/icons'
-import { setStoredCities, getStoredCities, setStoredOptions, getStoredOptions, LocalStorageOptions } from '../utils/storage'
-import { Grid, Box, InputBase, IconButton, Paper, Icon } from '@material-ui/core'
+import {
+  Add as AddIcon,
+  PictureInPicture as PictureInPictureIcon,
+} from '@material-ui/icons'
+import {
+  setStoredCities,
+  getStoredCities,
+  setStoredOptions,
+  getStoredOptions,
+  LocalStorageOptions,
+} from '../utils/storage'
+import {
+  Grid,
+  Box,
+  InputBase,
+  IconButton,
+  Paper,
+  Icon,
+} from '@material-ui/core'
 import 'fontsource-roboto'
 import './popup.css'
-
+import { Messages } from '../utils/mesages'
 
 const App: React.FC<{}> = () => {
-  
   const [cityInput, setCityInput] = useState<string>('')
   const [cities, setCities] = useState<string[]>([])
-  const [options, setOptions] = useState<LocalStorageOptions|null>(null)
-  
+  const [options, setOptions] = useState<LocalStorageOptions | null>(null)
+
   //? Fetching data from storage on open
-    useEffect(() => { 
-      getStoredCities().then(cities => {setCities(cities)})
-      getStoredOptions().then((options) => setOptions(options))
-      console.log(options)
-    }, [])
+  useEffect(() => {
+    getStoredCities().then((cities) => {
+      setCities(cities)
+    })
+    getStoredOptions().then((options) => setOptions(options))
+    console.log(options)
+  }, [])
 
   const handleCityDeleteButtonClick = (index: number) => {
     cities.splice(index, 1) // splice will delete the value in the list
     const updatedCitites = [...cities]
     setStoredCities(updatedCitites).then(() => {
       setCities(updatedCitites) // We then update the state with the new list
-    })  
+    })
   }
 
-  const handleCityButtonClick = () => { 
-    if (cityInput === '') { 
+  const handleCityButtonClick = () => {
+    if (cityInput === '') {
       return
     }
     const updatedCitites = [...cities, cityInput]
-    setStoredCities(updatedCitites).then(() => { 
+    setStoredCities(updatedCitites).then(() => {
       setCities(updatedCitites)
       setCityInput('')
     })
@@ -43,15 +60,23 @@ const App: React.FC<{}> = () => {
   const handleTempScaleButtonClick = () => {
     const updatedOptions: LocalStorageOptions = {
       ...options,
-      tempScale: options.tempScale === 'metric' ? 'imperial' : 'metric'
+      tempScale: options.tempScale === 'metric' ? 'imperial' : 'metric',
     }
-    setStoredOptions(updatedOptions).then(() => { 
+    setStoredOptions(updatedOptions).then(() => {
       setOptions(updatedOptions)
     })
   }
 
+  const handleButtonOverlay = () => {
+    chrome.tabs.query({ active: true }, (tabs) => {
+      console.log(Messages.TOGGLE_OVERLAY)
+      if (tabs.length > 0) {
+        chrome.tabs.sendMessage(tabs[1].id, Messages.TOGGLE_OVERLAY)
+      }
+    })
+  }
 
-  if (!options) { 
+  if (!options) {
     return null
   }
 
@@ -84,12 +109,19 @@ const App: React.FC<{}> = () => {
             </Box>
           </Paper>
         </Grid>
+        <Grid item>
+          <Paper>
+            <Box py={'4px'}>
+              <IconButton onClick={handleButtonOverlay}>
+                <PictureInPictureIcon />
+              </IconButton>
+            </Box>
+          </Paper>
+        </Grid>
       </Grid>
-      {options.homeCity != '' && 
-      < WeatherCard
-          city={options.homeCity}
-          tempScale={options.tempScale}
-        />}
+      {options.homeCity != '' && (
+        <WeatherCard city={options.homeCity} tempScale={options.tempScale} />
+      )}
       {/*  Mapping the cities from a list  */}
       {cities.map((city, index) => (
         <WeatherCard

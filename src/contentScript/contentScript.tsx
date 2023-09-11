@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom'
 import WeatherCard from '../components/WeatherCard'
 import { LocalStorageOptions, getStoredOptions, setStoredOptions } from '../utils/storage'
 import './contentScript.css'
+import { Messages } from '../utils/mesages'
 
 const App: React.FC<{}> = () => { 
     const [options, setOptions] = useState<LocalStorageOptions | null>(null)
@@ -16,6 +17,16 @@ const App: React.FC<{}> = () => {
             setIsActive(options.hasAutoOverlay)
         })
     }, [])
+
+
+    useEffect(() => { 
+        chrome.runtime.onMessage.addListener((msg) => { 
+            console.log(msg)
+            if (msg === Messages.TOGGLE_OVERLAY) { 
+                setIsActive(!isActive)
+            }
+        })
+    },[isActive])
     
     if (!options) { 
         return null
