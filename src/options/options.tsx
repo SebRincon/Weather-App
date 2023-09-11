@@ -10,7 +10,8 @@ import {
   Grid,
   Box,
   Typography,
-  Button
+  Button,
+  Switch
 } from '@material-ui/core'
 
 type FormState = 'ready' | 'saving'
@@ -28,7 +29,13 @@ const App: React.FC<{}> = () => {
 
   const handleHomeCityChange = (homeCity: string) => { 
     setOptions({...options, homeCity})
+  
   }
+  const handleAutoOverlayChange = (hasAutoOverlay: boolean) => { 
+    setOptions({...options, hasAutoOverlay})
+  }
+
+
   const handleSaveButtonClick = () => { 
     setFormState('saving')
     setStoredOptions(options).then(() => {
@@ -58,6 +65,16 @@ const App: React.FC<{}> = () => {
                 value={options.homeCity}
                 disabled={isFieldDisabled}
                 onChange={(event) => handleHomeCityChange(event.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <Typography variant="body1">Auto Overlay Toggle</Typography>
+              <Switch
+                value={options.hasAutoOverlay}
+                disabled={isFieldDisabled}
+                onChange={(event, checked) =>
+                  handleAutoOverlayChange(checked)
+                }
               />
             </Grid>
             <Grid item>

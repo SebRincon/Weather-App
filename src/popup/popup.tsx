@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react'
-import WeatherCard from './WeatherCard'
+import WeatherCard from '../components/WeatherCard'
 import { createRoot } from 'react-dom/client'
 import { Add as AddIcon } from '@material-ui/icons'
 import { setStoredCities, getStoredCities, setStoredOptions, getStoredOptions, LocalStorageOptions } from '../utils/storage'

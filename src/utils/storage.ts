@@ -7,6 +7,7 @@ export interface LocalStorage{
 export interface LocalStorageOptions {
     homeCity: string
     tempScale: OpenWeatherTemp
+    hasAutoOverlay: boolean
 }
 
 //? This is a type that can only be of types form Local storage
