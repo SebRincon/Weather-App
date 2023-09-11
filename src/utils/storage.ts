@@ -5,7 +5,8 @@ export interface LocalStorage{
 }
 
 export interface LocalStorageOptions {
-  tempScale: OpenWeatherTemp
+    homeCity: string
+    tempScale: OpenWeatherTemp
 }
 
 //? This is a type that can only be of types form Local storage
@@ -28,7 +29,7 @@ export function setStoredCities(citites: string[]): Promise<void> {
     })
 }
 
-export function getStoredCitites(): Promise<string[]> { 
+export function getStoredCities(): Promise<string[]> { 
     const keys: LocalStorageKeys[] = ['citites']
     return new Promise((resolve) => { 
         chrome.storage.local.get(keys, (res: LocalStorage) => { 

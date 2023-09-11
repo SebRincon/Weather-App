@@ -2,7 +2,7 @@ import React, { useState, useEffect} from 'react'
 import WeatherCard from './WeatherCard'
 import { createRoot } from 'react-dom/client'
 import { Add as AddIcon } from '@material-ui/icons'
-import { setStoredCities, getStoredCitites, setStoredOptions, getStoredOptions, LocalStorageOptions } from '../utils/storage'
+import { setStoredCities, getStoredCities, setStoredOptions, getStoredOptions, LocalStorageOptions } from '../utils/storage'
 import { Grid, Box, InputBase, IconButton, Paper, Icon } from '@material-ui/core'
 import 'fontsource-roboto'
 import './popup.css'
@@ -16,7 +16,7 @@ const App: React.FC<{}> = () => {
   
   //? Fetching data from storage on open
     useEffect(() => { 
-      getStoredCitites().then(cities => {setCities(cities)})
+      getStoredCities().then(cities => {setCities(cities)})
       getStoredOptions().then((options) => setOptions(options))
       console.log(options)
     }, [])
@@ -85,6 +85,11 @@ const App: React.FC<{}> = () => {
           </Paper>
         </Grid>
       </Grid>
+      {options.homeCity != '' && 
+      < WeatherCard
+          city={options.homeCity}
+          tempScale={options.tempScale}
+        />}
       {/*  Mapping the cities from a list  */}
       {cities.map((city, index) => (
         <WeatherCard
